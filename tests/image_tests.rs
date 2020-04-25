@@ -88,6 +88,14 @@ pub fn test_multiple_codes() {
 }
 
 #[test]
+pub fn test_barcode_with_hole() {
+    test_image(
+        "tests/images/barcode_with_hole.png",
+        vec![Ok(String::from("Ver1"))],
+    );
+}
+
+#[test]
 pub fn test_wikipedia_examples() {
     // Downloaded from https://en.wikipedia.org/wiki/QR_code
     test_image(
@@ -135,6 +143,9 @@ pub fn test_image(file: &str, expected: Vec<Result<String, Error>>) {
     let decoder = bardecoder::default_decoder();
     let result = decoder.decode(&img);
 
+    if let Err(e) = &result[0] {
+        println!("Error: {}", e);
+    }
     assert_eq!(expected.len(), result.len());
 
     for (expected, result) in expected.into_iter().zip(result) {
